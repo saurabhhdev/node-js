@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Declare HTML encoding and responsive viewport before page content. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 360px;
+            margin: 60px auto;
+            padding: 0 16px;
+        }
+
+        label, input, button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input, button {
+            margin: 8px 0 16px;
+            padding: 10px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #message {
+            min-height: 1.25em;
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTES: This page collects the username and password sent to POST
+         /register. The required attributes provide basic browser validation;
+         the server creates the MongoDB account and assigns its default role. -->
+    <h1>Create an account</h1>
+    <form id="signup-form">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+
+        <button type="submit">Sign up</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+
+    <script>
+        // Locate the form and status paragraph once, then reuse them on submit.
+        // The form is handled here with fetch instead of a normal page navigation.
+        const form = document.getElementById('signup-form');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async (event) => {
+            // Handle submission with fetch instead of navigating/reloading.
+            event.preventDefault();
+            // Give immediate feedback while waiting for the server response.
+            message.textContent = 'Creating your account...';
+
+            try {
+                // Read the named form controls, encode their values as JSON,
+                // and send them to the registration API endpoint.
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: form.elements.username.value,
+                        password: form.elements.password.value,
+                    }),
+                });
+                // Parse the controller's JSON response so its message can be
+                // displayed. The response includes the assigned role on success.
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Convert non-2xx responses into the same display path as
+                    // network or JSON parsing errors.
+                    throw new Error(data.error || 'Signup failed');
+                }
+
+                // Show the server's confirmation and clear the form for reuse.
+                message.textContent = data.message;
+                form.reset();
+            } catch (error) {
+                // Present a readable failure instead of leaving the user
+                // without feedback when the request cannot be completed.
+                message.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>

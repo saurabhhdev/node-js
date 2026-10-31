@@ -1,0 +1,22 @@
+{
+  "name": "authentication",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "dependencies": {
+    "cookie": "^2.0.1",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.11.4",
+    "nodemon": "^3.1.14",
+    "parser": "^0.1.4",
+    "uuid": "^14.0.3"
+  }
+}

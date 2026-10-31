@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Declare HTML encoding and responsive viewport before page content. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 360px;
+            margin: 60px auto;
+            padding: 0 16px;
+        }
+
+        label, input, button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input, button {
+            margin: 8px 0 16px;
+            padding: 10px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #message {
+            min-height: 1.25em;
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTES: The form gathers credentials for POST /login. JavaScript
+         intercepts submission, so the browser does not submit the form using
+         its action attribute or perform a full-page form navigation. -->
+    <h1>Log in</h1>
+    <form action="/users/login" id="login-form">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required>
+
+        <label for="password">Password</label>
+        <input id="password"  name="password" type="password" required>
+
+        <button type="submit">Log in</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+    <p><a href="/register">Create an account</a></p>
+
+    <script>
+        // Get the login form and the element used to report progress or errors.
+        const form = document.getElementById('login-form');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async (event) => {
+            // Use fetch so the page can display errors without a full reload.
+            event.preventDefault();
+            message.textContent = 'Logging in...';
+
+            try {
+                // Send credentials as JSON. The controller checks them against
+                // the database and sets the authentication cookie on success.
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: form.elements.username.value,
+                        password: form.elements.password.value,
+                    }),
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Surface the API's error message (or a general fallback).
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // The controller returns the account role after successful
+                // authentication. Choose the corresponding protected landing page.
+                const destination = data.role === 'premium' ? '/premium.html' : '/free.html';
+                window.location.assign(destination);
+            } catch (error) {
+                // Show authentication or network errors beside the form.
+                message.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>

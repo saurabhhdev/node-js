@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 0 16px;
+            line-height: 1.5;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTES: Intended landing page for accounts with role "free". index.js
+         registers a matching route and applies the role guard before sending
+         this static HTML file. -->
+    <h1>Welcome, Free Member!</h1>
+    <p>You are signed in with a free account.</p>
+    <a href="/login">Return to login</a>
+</body>
+</html>

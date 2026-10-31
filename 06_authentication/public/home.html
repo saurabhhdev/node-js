@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Document metadata controls encoding, mobile sizing, and the browser tab title. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 0 16px;
+            line-height: 1.5;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTES: index.js serves this page through an explicit role-protected
+         route before static-file middleware. Its visible content is shared
+         with all allowed roles; the free and premium pages are separate. -->
+    <h1>Welcome!</h1>
+    <p>You have logged in successfully.</p>
+    <!-- This link navigates to the login page; it does not clear or invalidate
+         the authentication cookie. -->
+    <a href="/login">Log out</a>
+</body>
+</html>
