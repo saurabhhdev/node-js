@@ -1,0 +1,29 @@
+<%- include('partials/header', { title: 'Add a Blog | Blog App' }) %>
+
+<div class="container mt-4">
+    <h1>Add a Blog</h1>
+    <p>Write a title and body for your new post.</p>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger" role="alert"><%= error %></div>
+    <% } %>
+
+    <form class="card p-4" action="/blog/create" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label" for="title">Title</label>
+            <input class="form-control" id="title" name="title" type="text" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="content">Content</label>
+            <textarea class="form-control" id="content" name="content" rows="8" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="coverImage">Cover photo (optional)</label>
+            <input class="form-control" id="coverImage" name="coverImage" type="file" accept="image/jpeg,image/png,image/gif,image/webp">
+            <small class="form-text text-muted">JPEG, PNG, GIF, or WebP; maximum 5 MB.</small>
+        </div>
+        <button class="btn btn-primary" type="submit">Publish</button>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

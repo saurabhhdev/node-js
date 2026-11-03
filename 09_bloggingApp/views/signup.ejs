@@ -1,0 +1,48 @@
+<%- include('partials/header', {title: 'Signup - Blog App' }) %>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Signup</h4>
+                    </div>
+                    <div class="card-body">
+                        <% if (locals.error) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= error %>
+                            </div>
+                            <% } %>
+                                <form action="/user/signup" method="POST" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">User Name</label>
+                                        <input type="text" class="form-control" id="username" name="username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            required minlength="6">
+                                        <div class="form-text">Password must be at least 6 characters long.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profileImage" class="form-label">Profile photo (optional)</label>
+                                        <input type="file" class="form-control" id="profileImage" name="profileImage"
+                                            accept="image/jpeg,image/png,image/gif,image/webp">
+                                        <div class="form-text">JPEG, PNG, GIF, or WebP. Maximum size: 5 MB.</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Signup</button>
+                                </form>
+                                <div class="text-center mt-3">
+                                    <p>Already have an account? <a href="/login">Login here</a></p>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
