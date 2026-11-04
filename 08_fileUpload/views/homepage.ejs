@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- NOTES: Declare UTF-8 so text is decoded consistently and set the
+         viewport so the form fits device-sized screens. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+
+<body>
+    <!-- This page is rendered by the GET / route in index.js. -->
+    <h1>File Upload</h1>
+    <!-- NOTES: Submit the selected file to POST /upload using multipart form
+         encoding, which is required for browser file uploads. The input's name
+         "yourFile" must match upload.single('yourFile') in the server route. -->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <!-- The browser supplies the selected file under the yourFile field. -->
+        <input type="file" name="yourFile">
+        <!-- Submitting sends the form and file to the server's upload handler. -->
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+</html>
