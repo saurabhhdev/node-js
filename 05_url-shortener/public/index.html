@@ -1,0 +1,139 @@
+   <!DOCTYPE html>
+   <html lang="en">
+   	<head>
+   		<meta charset="UTF-8" />
+   		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   		<title>URL Shortener</title>
+   		<style>
+   			body {
+   				font-family: Arial, sans-serif;
+   				max-width: 1200px;
+   				margin: 0 auto;
+   				padding: 20px;
+   			}
+   			table {
+   				width: 100%;
+   				border-collapse: collapse;
+   				margin-top: 10px;
+   			}
+   			th, td {
+   				border: 1px solid #ddd;
+   				padding: 8px;
+   				text-align: left;
+   			}
+   			th {
+   				background-color: #f2f2f2;
+   			}
+   			tr:nth-child(even) {
+   				background-color: #f9f9f9;
+   			}
+   			#urlForm {
+   				margin-bottom: 20px;
+   			}
+   			input[type="text"] {
+   				width: 300px;
+   				padding: 10px;
+   				margin-right: 10px;
+   			}
+   			button {
+   				padding: 10px 15px;
+   				cursor: pointer;
+   			}
+   			#result {
+   				margin: 15px 0;
+   				padding: 10px;
+   				background-color: #e7f3ff;
+   				border: 1px solid #b3d7ff;
+   				border-radius: 4px;
+   			}
+   		</style>
+   	</head>
+   	<body>
+   		<h1>URL Shortener</h1>
+   		<form id="urlForm">
+   			<input
+   				type="text"
+   				id="originalUrl"
+   				placeholder="Enter URL to shorten"
+   				required
+   			/>
+   			<button type="submit">Shorten</button>
+   		</form>
+   		<div id="result"></div>
+
+   		<!-- Section to display all URL mappings -->
+   		<hr>
+   		<h2>All Shortened URLs</h2>
+   		<button id="fetchUrlsBtn">Refresh URLs</button>
+   		<div id="urlsList"></div>
+
+   		<script>
+   			// Stop the browser's default form navigation and submit the values with fetch instead.
+   			document
+   				.getElementById('urlForm')
+   				.addEventListener('submit', async (e) => {
+   					e.preventDefault();
+   					const originalUrl = document.getElementById('originalUrl').value;
+
+   					// Send JSON to the API so the server can validate and save the destination URL.
+   					const response = await fetch('/api/urls/shorten', {
+   						method: 'POST',
+   						headers: {
+   							'Content-Type': 'application/json',
+   						},
+   						body: JSON.stringify({ originalUrl }),
+   					});
+					const data = await response.json();
+					if (response.ok) {
+						// Show the short link returned by the server when creation succeeds.
+						document.getElementById(
+							'result'
+						).innerHTML = `Short URL: <a href="/${data.shortCode}" target="_blank">http://localhost:3000/${data.shortCode}</a>`;
+					} else {
+						document.getElementById(
+							'result'
+						).innerHTML = `Error: ${data.error}`;
+					}
+   				});
+
+   			// Function to fetch and display all URLs
+   			async function fetchAllUrls() {
+   				try {
+   					// Request the saved links, then build a table from the returned JSON array.
+   					const response = await fetch('/api/urls/');
+   					const urls = await response.json();
+   					
+   					const urlsList = document.getElementById('urlsList');
+   					
+   					if (urls.length === 0) {
+   						urlsList.innerHTML = '<p>No URLs found.</p>';
+   						return;
+   					}
+   					
+   					let html = '<table border="1" style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
+   					html += '<tr><th>Short Code</th><th>Original URL</th><th>Short URL</th><th>Clicks</th></tr>';
+   					
+   					urls.forEach(url => {
+   						html += `<tr>
+   							<td>${url.shortCode}</td>
+   							<td><a href="${url.originalUrl}" target="_blank">${url.originalUrl}</a></td>
+   							<td><a href="/${url.shortCode}" target="_blank">http://localhost:3000/${url.shortCode}</a></td>
+   							<td>${url.clicks}</td>
+   						</tr>`;
+   					});
+   					
+   					html += '</table>';
+   					urlsList.innerHTML = html;
+   				} catch (error) {
+   					document.getElementById('urlsList').innerHTML = `<p>Error fetching URLs: ${error.message}</p>`;
+   				}
+   			}
+
+   			// Event listener for refresh button
+   			document.getElementById('fetchUrlsBtn').addEventListener('click', fetchAllUrls);
+
+   			// Fetch URLs on page load
+   			window.addEventListener('load', fetchAllUrls);
+   		</script>
+   	</body>
+   </html>
